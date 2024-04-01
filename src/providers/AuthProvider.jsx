@@ -9,22 +9,28 @@ export const AuthContext = createContext(null);
 
 const AuthProvider = ({ children }) => {
     const [user, setusers] = useState(null);
+    const [loading,setloading] = useState(true);
+
 
     const createUser = (email, password) => {
+        setloading(true)
         return createUserWithEmailAndPassword(auth, email, password)
     }
 
     const signInUser = (email, password) => {
+        setloading(true)
         return signInWithEmailAndPassword(auth, email, password)
     }
 
     const logOut = () => {
+        setloading(true)
         return signOut(auth)
     }
 
     useEffect(() => {
         const unSubscribe = onAuthStateChanged(auth, currentUser => {
             setusers(currentUser);
+            setloading(false)
             console.log('inside from useeffect', currentUser)
         })
         return () => {
@@ -37,7 +43,8 @@ const AuthProvider = ({ children }) => {
         user,
         createUser,
         signInUser,
-        logOut
+        logOut,
+        loading
     }
 
     return (
